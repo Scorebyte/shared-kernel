@@ -3,11 +3,13 @@ export type DemoScenario = 'stable' | 'growth' | 'attention'
 export type Classification =
   | 'BUSINESS_REVENUE'
   | 'BUSINESS_EXPENSE'
+  | 'PERSONAL_REVENUE'
   | 'PERSONAL_EXPENSE'
   | 'PERSONAL_TRANSFER'
   | 'TAX_PAYMENT'
   | 'LOAN_PAYMENT'
   | 'SUPPLIER_PAYMENT'
+  | 'REFUND'
   | 'UNKNOWN'
 
 export interface ClassifiedTransaction {
@@ -22,6 +24,18 @@ export interface ClassifiedTransaction {
   isBusinessTransaction: boolean
   classifierSource: 'RULE' | 'ML' | 'HYBRID'
   explanation: string
+  needsReview: boolean
+}
+
+export interface TransferMatch {
+  debitTransactionId: string
+  creditTransactionId: string
+  debitAccountId: string
+  creditAccountId: string
+  amount: number
+  confidence: number
+  status: 'CONFIRMED' | 'NEEDS_REVIEW'
+  reason: string
 }
 
 export interface RawTransaction {
@@ -47,7 +61,7 @@ export interface AnalysisInput {
 }
 
 export interface PipelineStep {
-  id: 'INGESTION' | 'NORMALIZATION' | 'CLASSIFICATION' | 'REPORTING' | 'SCORING'
+  id: 'INGESTION' | 'NORMALIZATION' | 'CLASSIFICATION' | 'RECONCILIATION' | 'REPORTING' | 'SCORING'
   label: string
   status: 'COMPLETED'
   records: number
@@ -148,6 +162,7 @@ export interface CreditAnalysis {
   }
   pipeline: PipelineStep[]
   transactions: ClassifiedTransaction[]
+  transferMatches: TransferMatch[]
   report: {
     businessRevenue: number
     businessExpenses: number
