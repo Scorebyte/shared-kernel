@@ -14,19 +14,31 @@ npm run build
 
 Gera `dist/` com JS (ESM) + `.d.ts`.
 
-## Publicar
+## Como é consumido hoje
+
+Este pacote ainda não foi publicado num registry npm. `institutional-site` e
+`analyst-platform` instalam direto deste repositório Git:
+
+```json
+"@scorbyte/shared-kernel": "github:Scorebyte/shared-kernel"
+```
+
+O script `prepare` roda `npm run build` automaticamente quando o npm instala
+a partir do Git, então o consumidor sempre recebe o `dist/` atualizado.
+
+## Publicar num registry (opcional, futuro)
 
 ```bash
 npm publish
 ```
 
 (requer estar autenticado no registry configurado para o escopo `@scorbyte`).
+Depois de publicado de verdade, basta trocar a dependência dos consumidores
+para uma versão semver normal (`^0.1.0`) e rodar `npm install`.
 
-## Uso local antes de publicar
+## Uso local durante desenvolvimento
 
-Enquanto o pacote ainda não foi publicado, os projetos consumidores
-(`institutional-site`, `analyst-platform`) podem apontar para esta pasta com
-`npm link`:
+Pra testar mudanças locais antes de dar push, use `npm link`:
 
 ```bash
 # aqui, em shared-kernel/
@@ -36,6 +48,3 @@ npm link
 # em institutional-site/ ou analyst-platform/
 npm link @scorbyte/shared-kernel
 ```
-
-Depois de publicado, basta `npm install` normalmente — a versão fica travada
-no `package.json` de cada consumidor (`^0.1.0`).
