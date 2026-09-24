@@ -7,6 +7,7 @@ export type Classification =
   | 'PERSONAL_EXPENSE'
   | 'PERSONAL_TRANSFER'
   | 'TAX_PAYMENT'
+  | 'LOAN_RECEIVED'
   | 'LOAN_PAYMENT'
   | 'SUPPLIER_PAYMENT'
   | 'REFUND'
@@ -33,8 +34,17 @@ export interface TransferMatch {
   debitAccountId: string
   creditAccountId: string
   amount: number
+  feeAmount: number
   confidence: number
   status: 'CONFIRMED' | 'NEEDS_REVIEW'
+  reason: string
+}
+
+export interface RefundLink {
+  refundTransactionId: string
+  originalTransactionId: string
+  amount: number
+  confidence: number
   reason: string
 }
 
@@ -91,8 +101,14 @@ export interface MonthlyCashFlow {
   month: string
   revenue: number
   businessExpenses: number
+  personalRevenue: number
   personalExpenses: number
-  netCashFlow: number
+  businessCashFlow: number
+  internalTransfers: number
+  loanProceeds: number
+  financingPayments: number
+  pendingReviewAmount: number
+  consolidatedAccountFlow: number
 }
 
 export interface CreditAnalysis {
@@ -163,11 +179,19 @@ export interface CreditAnalysis {
   pipeline: PipelineStep[]
   transactions: ClassifiedTransaction[]
   transferMatches: TransferMatch[]
+  refundLinks: RefundLink[]
   report: {
     businessRevenue: number
     businessExpenses: number
+    personalRevenue: number
     personalExpenses: number
-    netCashFlow: number
+    businessCashFlow: number
+    internalTransfers: number
+    loanProceeds: number
+    financingPayments: number
+    pendingReviewAmount: number
+    consolidatedAccountFlow: number
+    availableCashFlow: number
     averageMonthlyRevenue: number
     recurringRevenueRate: number
     stabilityScore: number
